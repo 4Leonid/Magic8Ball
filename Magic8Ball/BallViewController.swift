@@ -11,6 +11,9 @@ import SnapKit
 
 class BallViewController: UIViewController {
   //  MARK: - Private Properties
+  private let allPictures = [#imageLiteral(resourceName: "ball3"), #imageLiteral(resourceName: "ball4"), #imageLiteral(resourceName: "ball5"), #imageLiteral(resourceName: "ball1"), #imageLiteral(resourceName: "ball2")]
+  private var count = 0
+  
   private lazy var askLabel: UILabel = {
     let element = UILabel()
     element.text = "Ask Me Anything..."
@@ -24,6 +27,7 @@ class BallViewController: UIViewController {
   private lazy var askImage: UIImageView = {
     let element = UIImageView()
     element.image = UIImage(named: "ball1")
+    element.isHidden = true
     
     return element
   }()
@@ -31,6 +35,7 @@ class BallViewController: UIViewController {
   private lazy var askButton: UIButton = {
     let element = UIButton(type: .system)
     element.setTitle("Ask", for: .normal)
+    element.addTarget(self, action: #selector(askPressed), for: .touchUpInside)
     element.titleLabel?.font = UIFont.boldSystemFont(ofSize: 30)
     element.backgroundColor = .white
     element.tintColor = #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1)
@@ -40,16 +45,23 @@ class BallViewController: UIViewController {
   private lazy var stackView: UIStackView = {
     let element = UIStackView()
     element.axis = .vertical
-    element.spacing = 60
+    element.spacing = 80
     element.distribution = .fill
     return element
   }()
 
+  //  MARK: - Override Methods
   override func viewDidLoad() {
     super.viewDidLoad()
     view.backgroundColor = #colorLiteral(red: 0, green: 0.9914394021, blue: 1, alpha: 1)
     addViews()
     addConstraints()
+  }
+  
+  //  MARK: -  Private Methods
+  @objc private func askPressed() {
+    askImage.isHidden = false
+    askImage.image = allPictures.randomElement()
   }
 }
 
@@ -66,17 +78,18 @@ extension BallViewController {
   private func addConstraints() {
     stackView.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalToSuperview().inset(120)
+      make.top.equalToSuperview().inset(160)
     }
     
     askButton.snp.makeConstraints { make in
       make.centerX.equalToSuperview()
-      make.top.equalTo(stackView.snp.bottom).offset(60)
+      make.bottom.equalToSuperview().inset(160)
       make.width.equalTo(100)
     }
   }
 }
 
+//  MARK: - Show ViewController
 struct ContentViewController: UIViewControllerRepresentable {
 
     typealias UIViewControllerType = BallViewController
